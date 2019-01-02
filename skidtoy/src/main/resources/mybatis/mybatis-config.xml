@@ -7,6 +7,6 @@
  </settings>
  
  <typeAliases>
-	
+	<typeAlias type="com.skid.skidtoy.board.vo.BoardVo" alias="boardVo"/>
  </typeAliases>
 </configuration>

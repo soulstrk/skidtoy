@@ -16,13 +16,17 @@
 	<!-- SqlSessionFactory설정 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="mapperLocations" value="classpath*:Mappers/**/*Mapper.xml" />
+		<property name="mapperLocations" value="classpath*:Mappers/**/*-mapper.xml" />
 		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
 	</bean>
 	
 	<!-- SqlSession설정 -->
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.skid.skidtoy.**.mapper" />
 	</bean>
 	
 </beans>
