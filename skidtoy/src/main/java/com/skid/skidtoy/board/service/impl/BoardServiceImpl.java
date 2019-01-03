@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.skid.skidtoy.board.mapper.BoardMapper;
 import com.skid.skidtoy.board.service.BoardService;
 import com.skid.skidtoy.board.vo.BoardVo;
-import com.skid.skidtoy.util.PageUtil;
 
 @Service
 public class BoardServiceImpl implements BoardService{

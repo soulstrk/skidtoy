@@ -6,12 +6,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skid.skidtoy.board.service.BoardService;
 import com.skid.skidtoy.board.vo.BoardVo;
@@ -45,6 +45,28 @@ public class BoardController {
 		model.addAttribute("pu", pu);
 		
 		return "board";
+	}
+	
+	@RequestMapping(value="/board/proc", method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> boardProc(String pageNum) {
+		Map<String, Object> boardMap = new HashMap<>();
+		
+		try {
+			int totalRowCount = boardSerivce.selRowCount();
+			
+			PageUtil pu = new PageUtil(Integer.parseInt(pageNum), totalRowCount, 5, 5);
+			
+			boardMap.put("pu", pu);
+			
+			List<BoardVo> list = boardSerivce.selAllList(boardMap);
+			
+			boardMap.put("list", list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			boardMap.put("err", "error");
+		}
+		
+		return boardMap;
 	}
 }
 
