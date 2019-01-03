@@ -10,5 +10,7 @@ import com.skid.skidtoy.board.vo.BoardVo;
 @Mapper
 public interface BoardMapper {
 
-	public List<BoardVo> selectAllList(Map<String, Object> map);
+	public List<BoardVo> selectAllList(Map<String, Object> map) throws Exception;
+	
+	public int selectRowCount() throws Exception;
 }

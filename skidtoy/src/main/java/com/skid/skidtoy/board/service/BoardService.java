@@ -7,5 +7,8 @@ import com.skid.skidtoy.board.vo.BoardVo;
 
 public interface BoardService {
 	
-	public List<BoardVo> selAllList(Map<String, Object> map);
+	public List<BoardVo> selAllList(Map<String, Object> map) throws Exception;
+	
+	public int selRowCount() throws Exception;
+	
 }

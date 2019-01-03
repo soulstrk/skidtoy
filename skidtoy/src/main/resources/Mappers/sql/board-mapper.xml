@@ -18,11 +18,18 @@
 		SELECT
 			<include refid="selectColumn"/>
 		FROM
-			(SELECT <include refid="selectColumn"/> FROM BOARD ORDER BY B_NUM ASC)
+			(SELECT B.*, ROWNUM AS RNUM FROM BOARD B ORDER BY B_NUM ASC) A
 		WHERE
 	<![CDATA[		
-			ROWNUM >= #{startRow} and
-			ROWNUM <= #{endRow}	
+			A.RNUM >= #{pu.startRow} and
+			A.RNUM <= #{pu.endRow}	
 	]]>			
+	</select>
+	
+	<select id="selectRowCount" resultType="int">
+		SELECT
+			COUNT(B_NUM)
+		FROM
+			BOARD
 	</select>  	
   </mapper>
