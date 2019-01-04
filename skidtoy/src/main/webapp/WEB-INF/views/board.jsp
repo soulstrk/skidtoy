@@ -75,7 +75,9 @@
                 dataType : "json",
                 data : param,
                 success : function(data) {
+                    console.log(data.pu);
                     makeDocument.board(data.list);
+                    makeDocument.paging(data.pu);
                 }
             })
         }
@@ -83,37 +85,50 @@
 
     $(function() {
         //paging 버튼 이벤트 리스너
-        $(".page-item").on("click", board.pageNumSubmit);
+        //$(".page-item").on("click", board.pageNumSubmit);
+        //동적으로 사용하기 위해 $(document)로 잡아와야한다.
+        $(document).on("click",".page-item",board.pageNumSubmit);
     });
 
     var makeDocument = {
+        // Table 그리기
         board : function(list) {
-            $("#boardTable").children().remove();
-            var html = "";
-            html += "<tr>"
-            html += "   <th>글 번호</th>"
-            html += "   <th>작성자</th>"
-            html += "   <th>글 제목</th>"
-            html += "   <th>날짜</th>"
-            html += "   <th>조회수</th>"
-            html += "</tr>"
-            $("#boardTable").append(html);
+            $("#boardTable").find("tr").first().nextAll().remove();
             list.forEach(function(val, i) {
-                html = "";
-                html += "<tr>";
-                html += "   <td>"+ val.bNum +"</td>";
-                html += "   <td>"+ val.bWriter +"</td>";
-                html += "   <td>"+ val.bTitle +"</td>";
-                html += "   <td>"+ val.bRegdate +"</td>";
-                html += "   <td>"+ val.bHit +"</td>";
-                html += "<tr>"; 
-                $("#boardTable").append(html);                    
+                var html2 = "";
+                html2 += "<tr>";
+                html2 += "   <td>"+ val.bNum +"</td>";
+                html2 += "   <td>"+ val.bWriter +"</td>";
+                html2 += "   <td>"+ val.bTitle +"</td>";
+                html2 += "   <td>"+ val.bRegdate +"</td>";
+                html2 += "   <td>"+ val.bHit +"</td>";
+                html2 += "</tr>"; 
+                $("#boardTable").children().append(html2);
             });
         },
-        paging : function() {
 
+        // paging 부분 그리기
+        paging : function(pu) {
+            var html = "";
+			$(".pagination").children().remove();
+            if(pu.startPageNum !== 1) {
+                html += "<li class='page-item' id='"+(parseInt(pu.startPageNum) - 1)+"'><a class='page-link' href='#'>Previous</a></li>";
+            }
+            for(let i = pu.startPageNum; i <= pu.endPageNum; i++) {
+                if (pu.pageNum === i) {
+                    html += "<li class='page-item active' id='"+i+"'><a class='page-link' href='#'>"+i+"</a></li>";    
+                } else {
+                    html += "<li class='page-item' id='"+i+"'><a class='page-link' href='#'>"+i+"</a></li>";
+                }
+            }
+            if(pu.endPageNum < pu.totalPageCount) {
+                html += "<li class='page-item' id='"+(parseInt(pu.endPageNum) + 1)+"'><a class='page-link' href='#'>Next</a></li>";
+            }
+
+            $(".pagination").append(html);	
         }
     }
+    
 </script>
 </html>
 
