@@ -11,4 +11,6 @@ public interface BoardService {
 	
 	public int selRowCount() throws Exception;
 	
+	public void insBoardInfo(BoardVo boardVo) throws Exception;
+	
 }

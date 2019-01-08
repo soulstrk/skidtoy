@@ -27,4 +27,9 @@ public class BoardServiceImpl implements BoardService{
 		return boardMapper.selectRowCount();
 	}
 
+	@Override
+	public void insBoardInfo(BoardVo boardVo) throws Exception {
+		boardMapper.insBoardInfo(boardVo);
+	}
+
 }

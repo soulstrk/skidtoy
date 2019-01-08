@@ -35,6 +35,7 @@
         </div>
         
         <div class="row">
+        	<a href="${pageContext.request.contextPath}/board/write">글 쓰기</a>
             <ul class="pagination">
             	<c:choose>
             		<c:when test="${pu.startPageNum != 1 }">
@@ -71,7 +72,7 @@
             param.pageNum = pageNum;
             $.ajax ({
                 type : "POST",
-                url : "board/proc",
+                url : "${pageContext.request.contextPath}/board/proc",
                 dataType : "json",
                 data : param,
                 success : function(data) {

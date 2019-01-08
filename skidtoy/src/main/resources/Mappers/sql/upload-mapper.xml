@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.skid.skidtoy.upload.mapper.UploadMapper">
+  
+  		<insert id="insUploadFile" parameterType="fileUploadVo">
+  			INSERT INTO FILE_UPLOAD
+  				(FILE_SEQ
+  				,B_NUM
+  				,ORG_NM
+  				,SVG_NM
+  				,FILE_SIZE)
+  			VALUES
+  				(FILE_SEQ.NEXTVAL
+  				,#{bNum}
+  				,#{orgNm}
+  				,#{svgNm}
+  				,#{fileSize})
+  		</insert>
+  	
+  </mapper>

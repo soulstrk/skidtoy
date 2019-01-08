@@ -31,5 +31,29 @@
 			COUNT(B_NUM)
 		FROM
 			BOARD
-	</select>  	
+	</select>
+	
+	<insert id="insBoardInfo" parameterType="boardVo">
+		<selectKey keyProperty="bNum" resultType="int" order="BEFORE">
+			select BOARD_SEQ.NEXTVAL from dual
+		</selectKey>
+		INSERT INTO BOARD
+			(
+				B_NUM
+				,B_TITLE
+				,B_WRITER
+				,B_CONTENT
+				,B_REGDATE
+				,B_HIT
+			)
+		VALUES
+			(
+				#{bNum}
+				,#{bTitle}
+				,#{bWriter}
+				,#{bContent}
+				,sysdate
+				,0
+			)
+	</insert>  	
   </mapper>

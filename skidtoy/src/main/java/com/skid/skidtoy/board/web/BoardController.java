@@ -12,16 +12,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.skid.skidtoy.board.service.BoardService;
 import com.skid.skidtoy.board.vo.BoardVo;
+import com.skid.skidtoy.upload.service.UploadService;
+import com.skid.skidtoy.upload.vo.FileUploadVo;
 import com.skid.skidtoy.util.PageUtil;
+import com.skid.skidtoy.util.UploadFileUtils;
 
 @Controller
 public class BoardController {
 	
 	@Resource
 	private BoardService boardSerivce;
+	
+	@Resource
+	private UploadService uploadService;
+	
+	@Resource(name = "uploadPath")
+	private String uploadPath;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String init() {
@@ -30,7 +40,6 @@ public class BoardController {
 	
 	@RequestMapping(value="/board", method= { RequestMethod.POST, RequestMethod.GET })
 	public String boardInit(@RequestParam(defaultValue = "1") String pageNum, Model model) throws Exception {
-		System.out.println(pageNum);
 		Map<String, Object> boardMap = new HashMap<>();
 		
 		int totalRowCount = boardSerivce.selRowCount();
@@ -67,6 +76,34 @@ public class BoardController {
 		}
 		
 		return boardMap;
+	}
+	
+	@RequestMapping(value = "/board/write")
+	public String boardWrite() {
+		return "write";
+	}
+	
+	@SuppressWarnings("unused")
+	@RequestMapping(value = "/board/upload", method=RequestMethod.POST)
+	public String boardUpload(BoardVo boardVo, MultipartFile file) throws Exception{
+		FileUploadVo fileUploadVo = null;
+		
+		if (file.getSize() != 0 || file.getOriginalFilename() != "") {
+			String originalName = file.getOriginalFilename();
+			byte[] fileData = file.getBytes();
+			
+			Map<String, String> map = UploadFileUtils.uploadFile(uploadPath, originalName, fileData);			
+			
+			boardSerivce.insBoardInfo(boardVo);
+			
+			fileUploadVo = new FileUploadVo(0, boardVo.getbNum(), originalName, map.get("savedFileName"), String.valueOf(file.getSize()));
+			
+			uploadService.insUploadFile(fileUploadVo);
+		} else { 
+			boardSerivce.insBoardInfo(boardVo);
+		}
+		
+		return "forward:/board";
 	}
 }
 

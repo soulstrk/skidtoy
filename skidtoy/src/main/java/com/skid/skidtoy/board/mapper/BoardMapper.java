@@ -13,4 +13,7 @@ public interface BoardMapper {
 	public List<BoardVo> selectAllList(Map<String, Object> map) throws Exception;
 	
 	public int selectRowCount() throws Exception;
+	
+	public void insBoardInfo(BoardVo boardVo) throws Exception;
+	
 }

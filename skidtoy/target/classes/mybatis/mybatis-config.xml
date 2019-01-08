@@ -8,5 +8,6 @@
  
  <typeAliases>
 	<typeAlias type="com.skid.skidtoy.board.vo.BoardVo" alias="boardVo"/>
+	<typeAlias type="com.skid.skidtoy.upload.vo.FileUploadVo" alias="fileUploadVo"/>
  </typeAliases>
 </configuration>
