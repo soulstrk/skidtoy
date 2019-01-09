@@ -105,6 +105,15 @@ public class BoardController {
 		
 		return "forward:/board";
 	}
+	
+	@RequestMapping(value = "/board/upload/proc", method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> ajaxUpload(BoardVo boardVo, MultipartFile file) throws Exception{
+		FileUploadVo fileUploadVo = new FileUploadVo();
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		return map;
+	}
 }
 
 
