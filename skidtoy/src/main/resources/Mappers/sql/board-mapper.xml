@@ -33,6 +33,15 @@
 			BOARD
 	</select>
 	
+	<select id="selBoardInfo" parameterType="int" resultType="boardVo">
+		SELECT
+			<include refid="selectColumn"/>
+		FROM
+			BOARD
+		WHERE
+			B_NUM = #{value}
+	</select>
+	
 	<insert id="insBoardInfo" parameterType="boardVo">
 		<selectKey keyProperty="bNum" resultType="int" order="BEFORE">
 			select BOARD_SEQ.NEXTVAL from dual
@@ -55,5 +64,5 @@
 				,sysdate
 				,0
 			)
-	</insert>  	
+	</insert>
   </mapper>

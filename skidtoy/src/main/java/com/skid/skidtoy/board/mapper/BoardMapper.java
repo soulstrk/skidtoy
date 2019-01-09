@@ -16,4 +16,5 @@ public interface BoardMapper {
 	
 	public void insBoardInfo(BoardVo boardVo) throws Exception;
 	
+	public BoardVo selBoardInfo(int bNum) throws Exception;
 }

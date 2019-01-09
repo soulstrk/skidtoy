@@ -66,7 +66,7 @@
         <div class="row" style="margin-top: 5%;">
             <ul style="border: 1px solid red; width: 400px; height: 450px; list-style-type: none; padding-inline-start: 0px;">
                 <li style="text-align: center; padding: 1em;">파일 업로드</li>
-                <li class="fileList" style="text-align: center;">글 번호 <input type="text" name="bNum" id="bNum"><br>
+                <li class="fileList" style="text-align: center;"><span id="sp">글 번호</span><input type="text" name="bNum" id="bNum"><br>
                     <button style="margin-top: 2em;" id="addFileBtn">파일 추가</button>
                 </li>
                 <li style="text-align: center; margin-top: 3em;"><button id="ajaxBtn">AJAX로 등록!</button></li>
@@ -76,25 +76,6 @@
 </body>
 
 <script>
-    var board = {
-        pageNumSubmit: function () {
-            var pageNum = $(this).attr("id");
-            var param = {};
-            param.pageNum = pageNum;
-            $.ajax({
-                type: "POST",
-                url: "${pageContext.request.contextPath}/board/proc",
-                dataType: "json",
-                data: param,
-                success: function (data) {
-                    console.log(data.pu);
-                    makeDocument.board(data.list);
-                    makeDocument.paging(data.pu);
-                }
-            })
-        }
-    }
-
     $(function () {
         //paging 버튼 이벤트 리스너
         //$(".page-item").on("click", board.pageNumSubmit);
@@ -110,26 +91,46 @@
             
         $(document).on("click", "#ajaxBtn", function () {
             var frm = $("<form action='${pageContext.request.contextPath}/board/upload/proc' method='post'></form>");
-            var bNum = $("#bNum");
+            var bNum = $("#bNum").clone();
             var file = $("#file");
 
             $(frm).append(bNum).append(file);
-
-            
+			
             $(document.body).append(frm);
             
             $(frm).ajaxForm({
                 beforeSubmit: function (data, form, option) {
-                    //validation체크
-                    //막기위해서는 return false를 잡아주면됨
-                    return true;
+                	var flag = true;
+                    var check = ajaxUploadObj.checkBoardNum(data[0].value);
+                    console.log("check:"+check);
+
+                    if (check === "false") {
+                        console.log("없는 번호야");
+                        $("#bNum").val('');
+                        flag = false;
+                    }
+                    
+                    if (data[1] === undefined) {
+                    	console.log("파일이안올라옴;");
+                        return false;
+                    }
+                    if (data[1].value.size > 30000) {
+                        alert("사이즈 30000 초과");
+                        $("#addFileBtn").css("display","block");
+                    	flag = false;
+                    }
+                    
+                    
+                    return flag;
                 },
                 success: function (response, status) {
+                    $("#addFileBtn").css("display","block");
                     //성공후 서버에서 받은 데이터 처리
-                    alert("업로드 성공!!");
                 },
                 error: function () {
+                    $("#addFileBtn").css("display","block");
                     //에러발생을 위한 code페이지
+                	//ajaxUploadObj.makeInFileList();                
                 }
             });
 
@@ -181,7 +182,52 @@
 
             $(".pagination").append(html);
         }
+        
     }
+    
+    var board = {
+            pageNumSubmit : function () {
+                var pageNum = $(this).attr("id");
+                var param = {};
+                param.pageNum = pageNum;
+                $.ajax({
+                    type: "POST",
+                    url: "${pageContext.request.contextPath}/board/proc",
+                    dataType: "json",
+                    data: param,
+                    success: function (data) {
+                        console.log(data.pu);
+                        makeDocument.board(data.list);
+                        makeDocument.paging(data.pu);
+                    }
+                });
+            }
+        }
+    
+    var ajaxUploadObj = {
+    		"makeInFileList" : function() {
+                $(".fileList").empty();
+                var html = '<span id="sp">글 번호</span><input type="text" name="bNum" id="bNum"><br>';
+                      html += '<button style="margin-top: 2em;" id="addFileBtn">파일 추가</button>'
+                $(".fileList").append(html);   
+    		},
+    		"checkBoardNum" : function(val) {
+                var test = "";
+    			$.ajax({
+                    url : "${pageContext.request.contextPath}/board/check",
+                    data : {"bNum" : val},
+                    dataType : "json",
+                    async : false,
+                    type : "get",
+                    success : function(data) {
+                        console.log(data);
+                        test = data.check;
+                    }                    
+                });
+
+                return test;
+    		}
+    };
 </script>
 
 </html>

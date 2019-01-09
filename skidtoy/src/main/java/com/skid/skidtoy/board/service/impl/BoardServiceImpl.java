@@ -32,4 +32,9 @@ public class BoardServiceImpl implements BoardService{
 		boardMapper.insBoardInfo(boardVo);
 	}
 
+	@Override
+	public BoardVo selBoardInfo(int bNum) throws Exception {
+		return boardMapper.selBoardInfo(bNum);
+	}
+
 }

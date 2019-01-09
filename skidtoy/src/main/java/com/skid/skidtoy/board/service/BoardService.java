@@ -13,4 +13,6 @@ public interface BoardService {
 	
 	public void insBoardInfo(BoardVo boardVo) throws Exception;
 	
+	public BoardVo selBoardInfo(int bNum) throws Exception;
+	
 }

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -107,10 +108,37 @@ public class BoardController {
 	}
 	
 	@RequestMapping(value = "/board/upload/proc", method=RequestMethod.POST)
-	public @ResponseBody Map<String, Object> ajaxUpload(BoardVo boardVo, MultipartFile file) throws Exception{
-		FileUploadVo fileUploadVo = new FileUploadVo();
+	public @ResponseBody Map<String, String> ajaxUpload(BoardVo boardVo, MultipartFile file) throws Exception{
+		FileUploadVo fileUploadVo = null;
+		Map<String, String> map = null;
 		
-		Map<String, Object> map = new HashMap<>();
+		if (file.getSize() != 0 || file.getOriginalFilename() != "") {
+			map = UploadFileUtils.uploadFile(uploadPath, file.getOriginalFilename(), file.getBytes());
+			
+			fileUploadVo = new FileUploadVo(0, boardVo.getbNum(), file.getOriginalFilename(), (String)map.get("uploadedFileName"), String.valueOf(file.getSize()));
+			
+			uploadService.insUploadFile(fileUploadVo);
+		} else {
+			throw new Exception("file 전송 에러");
+		}
+		
+		return map;
+	}
+	
+	@RequestMapping(value="/board/check")
+	public @ResponseBody Map<String, String> checkBoardNum(int bNum) throws Exception{
+		BoardVo boardVo = null;
+		Map<String, String> map = new HashMap<>();
+		
+		if (bNum != 0) {
+			boardVo = boardSerivce.selBoardInfo(bNum);
+
+			if (boardVo == null) {
+				map.put("check", "false");
+			} else {
+				map.put("check", "true");
+			}
+		}
 		
 		return map;
 	}
